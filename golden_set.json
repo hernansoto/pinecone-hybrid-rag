@@ -1,0 +1,22 @@
+[
+  {
+    "pregunta": "¿Qué método de Pydantic devuelve un diccionario y cuál devuelve JSON?",
+    "documento_id_esperado": "pydantic-v2"
+  },
+  {
+    "pregunta": "¿Qué ocurre si una corrutina usa time.sleep dentro del event loop de asyncio?",
+    "documento_id_esperado": "python-asyncio"
+  },
+  {
+    "pregunta": "¿Para qué sirve Depends en FastAPI y cómo se relaciona con la inyección de dependencias?",
+    "documento_id_esperado": "fastapi-di"
+  },
+  {
+    "pregunta": "¿Qué diferencia hay entre Session.flush y Session.commit en SQLAlchemy?",
+    "documento_id_esperado": "sqlalchemy-session"
+  },
+  {
+    "pregunta": "¿Qué ventaja aporta un namespace en Pinecone para separar tenants o dominios?",
+    "documento_id_esperado": "pinecone-namespaces"
+  }
+]

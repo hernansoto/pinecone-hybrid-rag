@@ -1,0 +1,15 @@
+{
+  "doc_id": "fastapi-di",
+  "title": "FastAPI: dependencias y ciclo de vida",
+  "category": "python-web",
+  "pages": [
+    {
+      "page": 1,
+      "content": "FastAPI permite declarar dependencias con Depends. Una dependencia es una función, clase o callable cuyos resultados son necesarios para ejecutar un endpoint u otra dependencia. El framework resuelve el grafo de dependencias, inyecta los valores correspondientes y puede reutilizar el resultado dentro de la misma request. Esto reduce el acoplamiento entre rutas y componentes de infraestructura.\n\nUn ejemplo típico es una función get_current_user que valida un token y devuelve el usuario autenticado. Un endpoint puede declarar user = Depends(get_current_user) sin construir manualmente el servicio de autenticación. Otro caso común es get_db, que abre una sesión de base de datos y la cierra al finalizar la request. Las dependencias con yield permiten ejecutar lógica de cleanup después de que la operación principal concluye.\n\nDepends no es un contenedor de inversión de control general para toda la aplicación; es el mecanismo de inyección integrado en FastAPI y está especialmente adaptado al manejo de requests. Las dependencias pueden ser async def o funciones síncronas. FastAPI coordina su ejecución según el tipo de callable."
+    },
+    {
+      "page": 2,
+      "content": "Para pruebas, app.dependency_overrides permite sustituir una dependencia por otra implementación. Esto resulta útil para reemplazar una base real por una sesión de testing, un servicio externo por un fake o la autenticación por un usuario controlado. El override debe limpiarse después del test para evitar contaminación entre casos.\n\nLas rutas pueden definir modelos Pydantic para body, parámetros y respuestas. response_model ayuda a documentar y filtrar la salida. Los errores esperados de negocio pueden representarse mediante HTTPException con códigos HTTP apropiados. Los recursos compartidos durante toda la aplicación pueden administrarse mediante lifespan en lugar de inicializarlos repetidamente por request.\n\nEn servicios asíncronos es importante no colocar funciones bloqueantes de larga duración directamente dentro de endpoints async. Una dependencia o endpoint async que ejecute I/O síncrono pesado puede bloquear el event loop y degradar la concurrencia del servidor."
+    }
+  ]
+}

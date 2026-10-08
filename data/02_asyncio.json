@@ -1,0 +1,15 @@
+{
+  "doc_id": "python-asyncio",
+  "title": "Python asyncio: concurrencia cooperativa",
+  "category": "python-async",
+  "pages": [
+    {
+      "page": 1,
+      "content": "asyncio implementa concurrencia cooperativa para cargas principalmente I/O-bound. Una corrutina se define con async def y puede suspender su ejecución en puntos await. Mientras una operación de red, base de datos o temporizador está esperando, el event loop puede ejecutar otras tareas. Esto mejora la utilización del proceso sin implicar paralelismo de CPU.\n\nEl punto de entrada moderno para un script suele ser asyncio.run(main()). Dentro de una corrutina, asyncio.gather permite esperar múltiples operaciones concurrentes. Un Semaphore limita cuántas operaciones ingresan simultáneamente a una sección, algo importante cuando un proveedor aplica rate limits. asyncio.timeout establece un límite temporal alrededor de una operación y permite capturar TimeoutError.\n\nEl error clásico es bloquear el event loop. time.sleep es una función síncrona y bloqueante: si se llama dentro de una corrutina, el hilo del event loop queda detenido y ninguna otra tarea cooperativa puede progresar durante ese tiempo. Debe utilizarse await asyncio.sleep para esperas no bloqueantes. Si una biblioteca heredada expone una función síncrona inevitable, asyncio.to_thread permite ejecutarla en un hilo sin congelar el loop principal."
+    },
+    {
+      "page": 2,
+      "content": "Una Task representa una corrutina programada para ejecutarse en el event loop. Crear miles de tareas no significa que todas deban acceder simultáneamente a un servicio remoto. En integraciones con LLMs o bases vectoriales conviene controlar concurrencia, timeouts y reintentos. Los reintentos deben estar acotados y aplicar backoff frente a errores transitorios.\n\nEl streaming de tokens es otro caso donde la asincronía mejora la experiencia. Un generador asíncrono puede recibir fragmentos desde una API y producirlos mediante yield a medida que llegan. El consumidor recorre esos fragmentos con async for. Así se reduce el tiempo percibido hasta el primer token aunque la respuesta completa todavía no se haya terminado de generar.\n\nasyncio no acelera por sí solo operaciones CPU-bound intensivas. Cálculos pesados realizados directamente en el event loop siguen bloqueando a otras tareas. Para esas cargas se evalúan procesos, workers externos o estrategias específicas de paralelismo."
+    }
+  ]
+}

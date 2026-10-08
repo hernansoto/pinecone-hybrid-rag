@@ -1,0 +1,15 @@
+{
+  "doc_id": "pinecone-namespaces",
+  "title": "Pinecone Serverless: índices, namespaces y metadata",
+  "category": "vector-database",
+  "pages": [
+    {
+      "page": 1,
+      "content": "Pinecone Serverless almacena vectores en índices administrados. Un índice denso tiene una dimensión fija y una métrica de similitud. La dimensión debe coincidir exactamente con la longitud de los embeddings insertados. Si un modelo produce vectores de 768 dimensiones, el índice debe configurarse con 768; subir vectores de otra longitud provoca un error de dimensión.\n\nLos namespaces permiten particionar lógicamente los registros dentro de un mismo índice. Una aplicación multi-tenant puede asignar un namespace por tenant para que las consultas de un cliente no compitan con el contenido de otros. También pueden usarse para separar dominios documentales, versiones o entornos. Una consulta realizada en un namespace solo considera los registros de ese namespace, lo que reduce ruido y ayuda a mantener aislamiento lógico.\n\nLos namespaces no sustituyen todos los controles de autorización. La aplicación sigue siendo responsable de elegir correctamente el namespace permitido para cada usuario. Sin embargo, constituyen una herramienta importante para segmentar datos y acotar el espacio de búsqueda."
+    },
+    {
+      "page": 2,
+      "content": "Cada vector puede incluir metadata. En un sistema RAG es útil guardar source, page, category, doc_id, chunk_id y el texto original del fragmento. Conservar el texto junto al vector permite reconstruir el contexto recuperado sin consultar obligatoriamente otra base relacional. La metadata también habilita filtros para restringir búsquedas por categoría u otras propiedades.\n\nLa búsqueda semántica densa es fuerte para conceptos expresados con distintas palabras, pero puede perder precisión frente a identificadores exactos o nombres técnicos. Una estrategia híbrida combina un recuperador vectorial con uno léxico como BM25. Reciprocal Rank Fusion puede fusionar los rankings de ambos sin exigir que sus scores estén en la misma escala.\n\nEn un pipeline reproducible conviene usar IDs determinísticos para los chunks. Una reingesta con los mismos IDs funciona como upsert y evita duplicar registros. Si se cambia el modelo de embeddings o su dimensión, debe usarse un índice compatible y volver a generar los vectores; no es correcto mezclar embeddings de espacios diferentes."
+    }
+  ]
+}

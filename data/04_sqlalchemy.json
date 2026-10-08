@@ -1,0 +1,15 @@
+{
+  "doc_id": "sqlalchemy-session",
+  "title": "SQLAlchemy: Session, flush y transacciones",
+  "category": "python-database",
+  "pages": [
+    {
+      "page": 1,
+      "content": "La Session de SQLAlchemy representa una unidad de trabajo sobre objetos persistentes. Agrupa cambios pendientes y participa en una transacción. Agregar un objeto con session.add no significa necesariamente que la transacción ya haya sido confirmada en la base de datos. SQLAlchemy puede emitir SQL durante un flush antes del commit definitivo.\n\nSession.flush envía a la base de datos las operaciones SQL pendientes dentro de la transacción actual, pero no confirma la transacción. Después de flush, valores generados por la base —por ejemplo una clave primaria— pueden quedar disponibles en el objeto, mientras que la transacción todavía puede hacer rollback. Session.commit, en cambio, confirma la transacción actual; los cambios pasan a ser permanentes de acuerdo con las garantías del motor.\n\nEsta diferencia es útil cuando una operación necesita obtener un identificador generado y continuar creando entidades relacionadas antes de confirmar todo como una única unidad atómica. Hacer commit demasiado temprano puede fragmentar una operación que debería revertirse completa si una etapa posterior falla."
+    },
+    {
+      "page": 2,
+      "content": "Una excepción durante una operación de base de datos suele requerir rollback antes de reutilizar la sesión. El manejo de transacciones debe ubicarse en una capa con responsabilidad clara; distribuir commits en muchos repositorios puede hacer difícil garantizar atomicidad a nivel de caso de uso.\n\nSQLAlchemy ofrece APIs síncronas y asíncronas. AsyncSession trabaja con motores y drivers async compatibles. El hecho de que un método sea async no elimina la necesidad de respetar transacciones. flush, commit, rollback y refresh siguen representando pasos distintos en el ciclo de vida de la unidad de trabajo.\n\nEn aplicaciones web, la sesión suele tener un alcance acotado a una request o caso de uso. No se recomienda compartir una misma Session mutable entre requests concurrentes. Cada operación debe tener un límite transaccional explícito y liberar sus recursos al terminar."
+    }
+  ]
+}

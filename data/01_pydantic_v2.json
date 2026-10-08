@@ -1,0 +1,15 @@
+{
+  "doc_id": "pydantic-v2",
+  "title": "Pydantic v2: validación, serialización y modelos",
+  "category": "python-validation",
+  "pages": [
+    {
+      "page": 1,
+      "content": "Pydantic v2 permite definir contratos de datos mediante clases que heredan de BaseModel. Cada atributo declarado forma parte del esquema y puede tener restricciones adicionales usando Field. Cuando se construye una instancia, Pydantic valida los datos de entrada y realiza conversiones compatibles cuando corresponde. Para restricciones de dominio, por ejemplo una temperatura entre cero y dos, puede declararse Field(ge=0, le=2). Las validaciones que involucran más de un campo pueden implementarse con model_validator. SecretStr es útil para representar secretos en configuración porque su representación evita mostrar el valor completo en logs o impresiones accidentales.\n\nUn patrón habitual consiste en separar modelos de entrada, configuración y salida. Los modelos de entrada expresan qué acepta una función o API; los de salida describen qué garantiza la aplicación. Esto reduce el uso de diccionarios anidados sin estructura y facilita detectar errores antes de ejecutar operaciones externas. Pydantic genera también JSON Schema a partir de los modelos, lo que permite documentar interfaces y alimentar sistemas que requieren salidas estructuradas.\n\nEn Pydantic v2, model_dump() serializa una instancia a un diccionario de Python. model_dump_json() produce una representación JSON en forma de cadena. No son equivalentes: model_dump es apropiado cuando otro componente Python seguirá manipulando los datos, mientras que model_dump_json es útil cuando se necesita transmitir o persistir JSON. El método model_validate permite validar un objeto contra un modelo, y model_validate_json permite construir el modelo a partir de contenido JSON."
+    },
+    {
+      "page": 2,
+      "content": "La configuración basada en variables de entorno puede combinar python-dotenv con un modelo Pydantic. Primero se cargan las variables, luego se crea una clase Settings y se convierten los valores a tipos explícitos. Es importante no hardcodear API keys y no versionar el archivo .env. Un archivo .env.example puede documentar los nombres esperados dejando los valores secretos vacíos.\n\nLa validación temprana es especialmente útil en sistemas RAG. Antes de crear un índice vectorial se debe comprobar que la dimensión configurada es válida, que el tamaño del overlap sea menor que el chunk y que los pesos de un ensemble sean coherentes. Si una configuración inválida llega hasta un proveedor externo, el error será más difícil de diagnosticar y puede ocurrir después de consumir recursos.\n\nPara respuestas estructuradas, un modelo puede contener campos como answer, references y confidence. La aplicación no debería confiar únicamente en que el LLM produzca JSON válido; conviene parsear y validar la salida. Si el modelo generativo devuelve un valor incompatible con el esquema, la validación debe fallar de manera explícita en lugar de propagar datos ambiguos hacia capas posteriores."
+    }
+  ]
+}
